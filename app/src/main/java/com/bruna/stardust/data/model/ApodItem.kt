@@ -1,5 +1,7 @@
 package com.bruna.stardust.data.model
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ApodItem(
     val date: String,
     val title: String,
