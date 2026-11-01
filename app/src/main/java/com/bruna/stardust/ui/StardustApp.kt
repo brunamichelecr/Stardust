@@ -17,10 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.bruna.stardust.ui.navigation.AppTab
 import com.bruna.stardust.ui.today.TodayScreen
+import androidx.compose.runtime.saveable.rememberSaveable
 
 @Composable
 fun StardustApp() {
-    var selectedTab by remember { mutableStateOf(AppTab.Today) }
+    var selectedTab by rememberSaveable { mutableStateOf(AppTab.Today) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
