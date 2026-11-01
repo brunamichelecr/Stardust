@@ -7,17 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruna.stardust.data.remote.ApodClient
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class TodayViewModel : ViewModel() {
 
     var uiState by mutableStateOf<TodayUiState>(TodayUiState.Loading)
 
     init {
-        android.util.Log.d("batatinha", "ViewModel ***BATATINHA FRITA 123**")
         load()
     }
 
-    private fun load() {
+    fun load() {
+        uiState = TodayUiState.Loading
         viewModelScope.launch {
             uiState = try {
                 val item = ApodClient.api.getApod(perPage = 1).firstOrNull()
@@ -26,8 +27,10 @@ class TodayViewModel : ViewModel() {
                 } else {
                     TodayUiState.Empty
                 }
+            } catch (e: IOException) {
+                TodayUiState.Error("Sem conexão com a internet. Verifique a rede e tente de novo.")
             } catch (e: Exception) {
-                TodayUiState.Error(e.message ?: "Erro desconhecido")
+                TodayUiState.Error("Algo correu mal ao falar com a NASA. Tente de novo.")
             }
         }
     }

@@ -15,6 +15,8 @@ import android.content.Intent
 import androidx.compose.material3.Button
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun TodayScreen(
@@ -25,7 +27,25 @@ fun TodayScreen(
         is TodayUiState.Loading -> Text("Carregando...", modifier = modifier)
         is TodayUiState.Success -> ApodContent(item = state.item, modifier = modifier)
         is TodayUiState.Empty -> Text("A NASA não devolveu nada.", modifier = modifier)
-        is TodayUiState.Error -> Text("Erro: ${state.message}", modifier = modifier)
+        is TodayUiState.Error -> ErrorContent(
+            message = state.message,
+            onRetry = viewModel::load,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Text(message)
+        Button(onClick = onRetry) {
+            Text("Tentar de novo")
+        }
     }
 }
 
