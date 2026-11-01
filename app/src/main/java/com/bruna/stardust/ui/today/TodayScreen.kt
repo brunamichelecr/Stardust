@@ -11,6 +11,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.model.ApodItem
 import com.bruna.stardust.util.htmlToPlainText
+import android.content.Intent
+import androidx.compose.material3.Button
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 
 @Composable
 fun TodayScreen(
@@ -27,6 +31,8 @@ fun TodayScreen(
 
 @Composable
 private fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         if (item.hdurl != null) {
             AsyncImage(
@@ -37,6 +43,15 @@ private fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
         } else {
             Text("Sem imagem disponível.")
         }
+
+        if (item.media_type != "image") {
+            Button(onClick = {
+                context.startActivity(Intent(Intent.ACTION_VIEW, item.url.toUri()))
+            }) {
+                Text("Abrir na NASA")
+            }
+        }
+
         Text(item.title)
         Text(item.explanation?.let { htmlToPlainText(it) } ?: "Sem explicação disponível.")
         item.credit?.let { Text("Crédito: ${htmlToPlainText(it)}") }
