@@ -13,6 +13,7 @@ class TodayViewModel : ViewModel() {
     var uiState by mutableStateOf<TodayUiState>(TodayUiState.Loading)
 
     init {
+        android.util.Log.d("batatinha", "ViewModel ***BATATINHA FRITA 123**")
         load()
     }
 

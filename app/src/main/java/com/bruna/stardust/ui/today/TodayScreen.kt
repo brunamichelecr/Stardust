@@ -2,12 +2,15 @@ package com.bruna.stardust.ui.today
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.model.ApodItem
+import com.bruna.stardust.util.htmlToPlainText
 
 @Composable
 fun TodayScreen(
@@ -24,7 +27,7 @@ fun TodayScreen(
 
 @Composable
 private fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         if (item.hdurl != null) {
             AsyncImage(
                 model = item.hdurl,
@@ -35,5 +38,8 @@ private fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
             Text("Sem imagem disponível.")
         }
         Text(item.title)
+        Text(item.explanation?.let { htmlToPlainText(it) } ?: "Sem explicação disponível.")
+        item.credit?.let { Text("Crédito: ${htmlToPlainText(it)}") }
+        item.copyright?.let { Text("© ${htmlToPlainText(it)}") }
     }
 }
