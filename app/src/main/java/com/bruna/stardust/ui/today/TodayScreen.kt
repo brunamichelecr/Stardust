@@ -50,7 +50,7 @@ private fun ErrorContent(
 }
 
 @Composable
-private fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
+fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
