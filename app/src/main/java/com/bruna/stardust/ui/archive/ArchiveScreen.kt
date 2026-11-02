@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -23,15 +24,18 @@ import com.bruna.stardust.ui.today.ApodContent
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import com.bruna.stardust.ui.favorites.FavoritesViewModel
 
 private val firstApodDate = LocalDate.of(1995, 6, 16)
 
 @Composable
 fun ArchiveScreen(
     modifier: Modifier = Modifier,
-    viewModel: ArchiveViewModel = viewModel()
+    viewModel: ArchiveViewModel = viewModel(),
+    favoritesViewModel: FavoritesViewModel = viewModel()
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
+    val favoriteDates by favoritesViewModel.favoriteDates.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
         Button(
@@ -52,7 +56,12 @@ fun ArchiveScreen(
                 Text("Carregando...", modifier = Modifier.padding(16.dp))
 
             is ArchiveUiState.Success ->
-                ApodContent(item = state.item, modifier = Modifier.weight(1f))
+                ApodContent(
+                    item = state.item,
+                    isFavorite = state.item.date in favoriteDates,
+                    onToggleFavorite = { favoritesViewModel.toggleFavorite(state.item) },
+                    modifier = Modifier.weight(1f)
+                )
 
             is ArchiveUiState.NotFound ->
                 Column(modifier = Modifier.padding(16.dp)) {

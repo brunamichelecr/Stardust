@@ -12,20 +12,38 @@ import coil3.compose.AsyncImage
 import com.bruna.stardust.data.model.ApodItem
 import com.bruna.stardust.util.htmlToPlainText
 import android.content.Intent
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.Favorite
+import com.bruna.stardust.ui.favorites.FavoritesViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 @Composable
 fun TodayScreen(
     modifier: Modifier = Modifier,
-    viewModel: TodayViewModel = viewModel()
+    viewModel: TodayViewModel = viewModel(),
+    favoritesViewModel: FavoritesViewModel = viewModel()
 ) {
+    val favoriteDates by favoritesViewModel.favoriteDates.collectAsState()
+
     when (val state = viewModel.uiState) {
         is TodayUiState.Loading -> Text("Carregando...", modifier = modifier)
-        is TodayUiState.Success -> ApodContent(item = state.item, modifier = modifier)
+        is TodayUiState.Success -> ApodContent(
+            item = state.item,
+            isFavorite = state.item.date in favoriteDates,
+            onToggleFavorite = { favoritesViewModel.toggleFavorite(state.item) },
+            modifier = modifier
+        )
         is TodayUiState.Empty -> Text("A NASA não devolveu nada.", modifier = modifier)
         is TodayUiState.Error -> ErrorContent(
             message = state.message,
@@ -50,7 +68,12 @@ private fun ErrorContent(
 }
 
 @Composable
-fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
+fun ApodContent(
+    item: ApodItem,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -72,7 +95,21 @@ fun ApodContent(item: ApodItem, modifier: Modifier = Modifier) {
             }
         }
 
-        Text(item.title)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(item.title, modifier = Modifier.weight(1f))
+            IconButton(onClick = onToggleFavorite) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = if (isFavorite) "Remover dos favoritos" else "Guardar nos favoritos",
+                    tint = if (isFavorite) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                    }
+                )
+            }
+        }
+
         Text(item.explanation?.let { htmlToPlainText(it) } ?: "Sem explicação disponível.")
         item.credit?.let { Text("Crédito: ${htmlToPlainText(it)}") }
         item.copyright?.let { Text("© ${htmlToPlainText(it)}") }
