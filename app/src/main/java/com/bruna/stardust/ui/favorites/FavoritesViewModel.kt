@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.bruna.stardust.data.local.FavoriteApod
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,5 +29,12 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
                 dao.insert(item.toFavorite())
             }
         }
+    }
+
+    val favorites: StateFlow<List<FavoriteApod>> = dao.getAll()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun delete(date: String) {
+        viewModelScope.launch { dao.delete(date) }
     }
 }

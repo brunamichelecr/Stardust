@@ -19,6 +19,7 @@ import com.bruna.stardust.ui.navigation.AppTab
 import com.bruna.stardust.ui.today.TodayScreen
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.bruna.stardust.ui.archive.ArchiveScreen
+import com.bruna.stardust.ui.favorites.FavoritesScreen
 
 @Composable
 fun StardustApp() {
@@ -42,7 +43,7 @@ fun StardustApp() {
         when (selectedTab) {
             AppTab.Today -> TodayScreen(modifier = Modifier.padding(innerPadding))
             AppTab.Archive -> ArchiveScreen(modifier = Modifier.padding(innerPadding))
-            AppTab.Favorites -> PlaceholderScreen("Favoritos", Modifier.padding(innerPadding))
+            AppTab.Favorites -> FavoritesScreen(modifier = Modifier.padding(innerPadding))
         }
     }
 }
