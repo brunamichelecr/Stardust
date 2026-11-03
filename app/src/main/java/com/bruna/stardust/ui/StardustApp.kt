@@ -1,6 +1,7 @@
 package com.bruna.stardust.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -11,15 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.bruna.stardust.ui.navigation.AppTab
-import com.bruna.stardust.ui.today.TodayScreen
-import androidx.compose.runtime.saveable.rememberSaveable
 import com.bruna.stardust.ui.archive.ArchiveScreen
 import com.bruna.stardust.ui.favorites.FavoritesScreen
+import com.bruna.stardust.ui.navigation.AppTab
+import com.bruna.stardust.ui.today.TodayScreen
 
 @Composable
 fun StardustApp() {
@@ -40,10 +40,14 @@ fun StardustApp() {
             }
         }
     ) { innerPadding ->
+        val contentModifier = Modifier
+            .padding(innerPadding)
+            .consumeWindowInsets(innerPadding)
+
         when (selectedTab) {
-            AppTab.Today -> TodayScreen(modifier = Modifier.padding(innerPadding))
-            AppTab.Archive -> ArchiveScreen(modifier = Modifier.padding(innerPadding))
-            AppTab.Favorites -> FavoritesScreen(modifier = Modifier.padding(innerPadding))
+            AppTab.Today -> TodayScreen(modifier = contentModifier)
+            AppTab.Archive -> ArchiveScreen(modifier = contentModifier)
+            AppTab.Favorites -> FavoritesScreen(modifier = contentModifier)
         }
     }
 }
