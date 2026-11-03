@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -38,14 +37,14 @@ fun FavoritesScreen(
     val favorites by viewModel.favorites.collectAsState()
     var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
 
-    if (selectedDate != null) {
-        // TESTE: depois isto vira a tela de Detalhe de verdade
-        Column(modifier = modifier.padding(16.dp)) {
-            Text("Detalhe de $selectedDate")
-            Button(onClick = { selectedDate = null }) {
-                Text("Voltar")
-            }
-        }
+    val selected = favorites.find { it.date == selectedDate }
+
+    if (selected != null) {
+        FavoriteDetailScreen(
+            favorite = selected,
+            onBack = { selectedDate = null },
+            modifier = modifier
+        )
     } else if (favorites.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Ainda não tem favoritos.")
