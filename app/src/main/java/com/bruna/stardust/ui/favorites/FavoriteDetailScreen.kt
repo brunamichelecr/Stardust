@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,10 +40,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.util.htmlToPlainText
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.OutlinedButton
 
 @Composable
 fun FavoriteDetailScreen(
@@ -134,30 +136,35 @@ fun FavoriteDetailScreen(
                 label = { Text("A minha nota") },
                 minLines = 4,
                 maxLines = 4,
+                trailingIcon = {
+                    Column {
+                        IconButton(
+                            onClick = { onSaveNote(noteText) },
+                            enabled = noteText != favorite.note
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Guardar nota"
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                noteText = ""
+                                onSaveNote("")
+                            },
+                            enabled = favorite.note.isNotEmpty()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Apagar nota"
+                            )
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             )
-            Row(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = { onSaveNote(noteText) },
-                    enabled = noteText != favorite.note
-                ) {
-                    Text("Guardar nota")
-                }
-                OutlinedButton(
-                    onClick = {
-                        noteText = ""
-                        onSaveNote("")
-                    },
-                    enabled = favorite.note.isNotEmpty()
-                ) {
-                    Text("Apagar nota")
-                }
-            }
         }
     }
 }
