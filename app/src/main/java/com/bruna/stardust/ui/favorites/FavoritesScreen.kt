@@ -1,5 +1,6 @@
 package com.bruna.stardust.ui.favorites
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,12 +12,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -31,8 +36,17 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel = viewModel()
 ) {
     val favorites by viewModel.favorites.collectAsState()
+    var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
 
-    if (favorites.isEmpty()) {
+    if (selectedDate != null) {
+        // TESTE: depois isto vira a tela de Detalhe de verdade
+        Column(modifier = modifier.padding(16.dp)) {
+            Text("Detalhe de $selectedDate")
+            Button(onClick = { selectedDate = null }) {
+                Text("Voltar")
+            }
+        }
+    } else if (favorites.isEmpty()) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Ainda não tem favoritos.")
         }
@@ -41,6 +55,7 @@ fun FavoritesScreen(
             items(favorites, key = { it.date }) { favorite ->
                 FavoriteRow(
                     favorite = favorite,
+                    onClick = { selectedDate = favorite.date },
                     onDelete = { viewModel.delete(favorite.date) }
                 )
             }
@@ -51,11 +66,13 @@ fun FavoritesScreen(
 @Composable
 private fun FavoriteRow(
     favorite: FavoriteApod,
+    onClick: () -> Unit,
     onDelete: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
