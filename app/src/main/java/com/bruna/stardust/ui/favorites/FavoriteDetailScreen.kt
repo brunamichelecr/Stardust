@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.util.htmlToPlainText
+import androidx.compose.ui.geometry.Offset
 
 @Composable
 fun FavoriteDetailScreen(
@@ -45,8 +46,10 @@ fun FavoriteDetailScreen(
 
     if (fullscreen) {
         var scale by remember { mutableFloatStateOf(1f) }
-        val transformState = rememberTransformableState { zoomChange, _, _ ->
+        var offset by remember { mutableStateOf(Offset.Zero) }
+        val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
             scale = (scale * zoomChange).coerceIn(1f, 5f)
+            offset = if (scale == 1f) Offset.Zero else offset + offsetChange
         }
 
         Box(
@@ -60,7 +63,12 @@ fun FavoriteDetailScreen(
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer(scaleX = scale, scaleY = scale)
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        translationX = offset.x,
+                        translationY = offset.y
+                    )
                     .transformable(state = transformState)
             )
             Button(
