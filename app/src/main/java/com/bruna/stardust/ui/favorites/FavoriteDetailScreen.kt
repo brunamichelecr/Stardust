@@ -72,6 +72,7 @@ fun FavoriteDetailScreen(
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxSize()
+                    .clickable { fullscreen = false }
                     .graphicsLayer(
                         scaleX = scale,
                         scaleY = scale,
