@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
+import androidx.activity.compose.BackHandler
 
 @Composable
 fun FavoritesScreen(
@@ -38,7 +39,9 @@ fun FavoritesScreen(
     var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
 
     val selected = favorites.find { it.date == selectedDate }
-
+    BackHandler(enabled = selected != null) {
+        selectedDate = null
+    }
     if (selected != null) {
         FavoriteDetailScreen(
             favorite = selected,
