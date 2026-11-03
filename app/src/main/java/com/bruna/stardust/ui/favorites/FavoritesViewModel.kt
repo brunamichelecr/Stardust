@@ -37,4 +37,8 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     fun delete(date: String) {
         viewModelScope.launch { dao.delete(date) }
     }
+
+    fun updateNote(date: String, note: String) {
+        viewModelScope.launch { dao.updateNote(date, note) }
+    }
 }

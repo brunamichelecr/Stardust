@@ -46,6 +46,7 @@ fun FavoritesScreen(
         FavoriteDetailScreen(
             favorite = selected,
             onBack = { selectedDate = null },
+            onSaveNote = { note -> viewModel.updateNote(selected.date, note) },
             modifier = modifier
         )
     } else if (favorites.isEmpty()) {

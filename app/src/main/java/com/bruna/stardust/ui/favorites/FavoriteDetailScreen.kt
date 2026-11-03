@@ -35,11 +35,15 @@ import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.util.htmlToPlainText
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.OutlinedButton
 
 @Composable
 fun FavoriteDetailScreen(
     favorite: FavoriteApod,
     onBack: () -> Unit,
+    onSaveNote: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var fullscreen by rememberSaveable { mutableStateOf(false) }
@@ -134,6 +138,26 @@ fun FavoriteDetailScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             )
+            Row(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { onSaveNote(noteText) },
+                    enabled = noteText != favorite.note
+                ) {
+                    Text("Guardar nota")
+                }
+                OutlinedButton(
+                    onClick = {
+                        noteText = ""
+                        onSaveNote("")
+                    },
+                    enabled = favorite.note.isNotEmpty()
+                ) {
+                    Text("Apagar nota")
+                }
+            }
         }
     }
 }
