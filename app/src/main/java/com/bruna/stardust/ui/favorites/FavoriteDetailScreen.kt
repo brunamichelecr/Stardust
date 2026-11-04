@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.util.htmlToPlainText
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.IconButtonDefaults
 
 @Composable
 fun FavoriteDetailScreen(
@@ -90,13 +92,20 @@ fun FavoriteDetailScreen(
                         translationY = offset.y
                     )
                     .transformable(state = transformState))
-            Button(
+            IconButton(
                 onClick = { fullscreen = false },
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Black.copy(alpha = 0.5f),
+                    contentColor = Color.White
+                ),
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(16.dp)
             ) {
-                Text("Fechar")
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Fechar"
+                )
             }
         }
     } else {
@@ -105,10 +114,14 @@ fun FavoriteDetailScreen(
                 .imePadding()
                 .verticalScroll(rememberScrollState())
         ) {
-            Button(
-                onClick = onBack, modifier = Modifier.padding(16.dp)
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.padding(8.dp)
             ) {
-                Text("Voltar")
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Voltar"
+                )
             }
 
             AsyncImage(
