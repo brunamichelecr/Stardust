@@ -25,6 +25,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import com.bruna.stardust.ui.favorites.FavoritesViewModel
+import com.bruna.stardust.ui.components.LoadingState
+import com.bruna.stardust.ui.components.MessageState
 
 private val firstApodDate = LocalDate.of(1995, 6, 16)
 
@@ -46,38 +48,33 @@ fun ArchiveScreen(
         }
 
         when (val state = viewModel.uiState) {
-            is ArchiveUiState.Idle ->
-                Text(
-                    "Escolha uma data entre 16/06/1995 e hoje.",
-                    modifier = Modifier.padding(16.dp)
-                )
+            is ArchiveUiState.Idle -> MessageState(
+                message = "Escolha uma data entre 16/06/1995 e hoje.",
+                modifier = Modifier.weight(1f)
+            )
 
-            is ArchiveUiState.Loading ->
-                Text("Carregando...", modifier = Modifier.padding(16.dp))
+            is ArchiveUiState.Loading -> LoadingState(modifier = Modifier.weight(1f))
 
-            is ArchiveUiState.Success ->
-                ApodContent(
-                    item = state.item,
-                    isFavorite = state.item.date in favoriteDates,
-                    onToggleFavorite = { favoritesViewModel.toggleFavorite(state.item) },
-                    modifier = Modifier.weight(1f)
-                )
+            is ArchiveUiState.Success -> ApodContent(
+                item = state.item,
+                isFavorite = state.item.date in favoriteDates,
+                onToggleFavorite = { favoritesViewModel.toggleFavorite(state.item) },
+                modifier = Modifier.weight(1f)
+            )
 
-            is ArchiveUiState.NotFound ->
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Não há fotografia para esta data.")
-                    Button(onClick = { showPicker = true }) {
-                        Text("Tentar outra data")
-                    }
-                }
+            is ArchiveUiState.NotFound -> MessageState(
+                message = "Não há fotografia para esta data.",
+                actionLabel = "Tentar outra data",
+                onAction = { showPicker = true },
+                modifier = Modifier.weight(1f)
+            )
 
-            is ArchiveUiState.Error ->
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(state.message)
-                    Button(onClick = viewModel::retry) {
-                        Text("Tentar de novo")
-                    }
-                }
+            is ArchiveUiState.Error -> MessageState(
+                message = state.message,
+                actionLabel = "Tentar de novo",
+                onAction = viewModel::retry,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 

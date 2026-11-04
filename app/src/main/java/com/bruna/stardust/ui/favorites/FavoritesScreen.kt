@@ -1,7 +1,6 @@
 package com.bruna.stardust.ui.favorites
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
+import com.bruna.stardust.ui.components.MessageState
 
 @Composable
 fun FavoritesScreen(
@@ -60,9 +60,10 @@ fun FavoritesScreen(
             modifier = modifier
         )
     } else if (favorites.isEmpty()) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Ainda não tem favoritos.")
-        }
+        MessageState(
+            message = "Ainda não tem favoritos.\nToque no coração de uma foto para guardá-la.",
+            modifier = modifier
+        )
     } else {
         LazyColumn(modifier = modifier.fillMaxSize()) {
             item {

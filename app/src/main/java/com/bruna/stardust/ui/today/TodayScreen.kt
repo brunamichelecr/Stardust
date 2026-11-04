@@ -28,6 +28,8 @@ import com.bruna.stardust.ui.favorites.FavoritesViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Arrangement
+import com.bruna.stardust.ui.components.LoadingState
+import com.bruna.stardust.ui.components.MessageState
 
 @Composable
 fun TodayScreen(
@@ -38,35 +40,26 @@ fun TodayScreen(
     val favoriteDates by favoritesViewModel.favoriteDates.collectAsState()
 
     when (val state = viewModel.uiState) {
-        is TodayUiState.Loading -> Text("Carregando...", modifier = modifier)
+        is TodayUiState.Loading -> LoadingState(modifier = modifier)
         is TodayUiState.Success -> ApodContent(
             item = state.item,
             isFavorite = state.item.date in favoriteDates,
             onToggleFavorite = { favoritesViewModel.toggleFavorite(state.item) },
             modifier = modifier
         )
-        is TodayUiState.Empty -> Text("A NASA não devolveu nada.", modifier = modifier)
-        is TodayUiState.Error -> ErrorContent(
+        is TodayUiState.Empty -> MessageState(
+            message = "A NASA não devolveu nada hoje.",
+            modifier = modifier
+        )
+        is TodayUiState.Error -> MessageState(
             message = state.message,
-            onRetry = viewModel::load,
+            actionLabel = "Tentar de novo",
+            onAction = viewModel::load,
             modifier = modifier
         )
     }
 }
 
-@Composable
-private fun ErrorContent(
-    message: String,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier.padding(16.dp)) {
-        Text(message)
-        Button(onClick = onRetry) {
-            Text("Tentar de novo")
-        }
-    }
-}
 
 @Composable
 fun ApodContent(
