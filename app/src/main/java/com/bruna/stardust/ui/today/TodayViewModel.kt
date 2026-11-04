@@ -12,7 +12,7 @@ import java.io.IOException
 class TodayViewModel : ViewModel() {
 
     var uiState by mutableStateOf<TodayUiState>(TodayUiState.Loading)
-
+        private set
     init {
         load()
     }

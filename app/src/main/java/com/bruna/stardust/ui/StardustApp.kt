@@ -1,6 +1,5 @@
 package com.bruna.stardust.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.bruna.stardust.ui.archive.ArchiveScreen
 import com.bruna.stardust.ui.favorites.FavoritesScreen
@@ -60,9 +58,3 @@ fun StardustApp() {
     }
 }
 
-@Composable
-private fun PlaceholderScreen(title: String, modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("$title (em construção)")
-    }
-}
