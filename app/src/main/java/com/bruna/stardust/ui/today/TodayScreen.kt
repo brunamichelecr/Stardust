@@ -96,7 +96,11 @@ fun ApodContent(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(item.title, modifier = Modifier.weight(1f))
+            Text(
+                item.title,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.weight(1f)
+            )
             IconButton(onClick = onToggleFavorite) {
                 Icon(
                     imageVector = Icons.Default.Favorite,

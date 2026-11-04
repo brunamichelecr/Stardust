@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -112,8 +113,12 @@ private fun FavoriteRow(
                 .weight(1f)
                 .padding(horizontal = 12.dp)
         ) {
-            Text(favorite.title)
-            Text(favorite.date)
+            Text(favorite.title, style = MaterialTheme.typography.titleMedium)
+            Text(
+                favorite.date,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
         IconButton(onClick = onDelete) {
             Icon(

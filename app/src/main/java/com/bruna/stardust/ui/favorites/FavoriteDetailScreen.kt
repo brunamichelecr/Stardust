@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -122,8 +123,15 @@ fun FavoriteDetailScreen(
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(favorite.title)
-                Text(favorite.date)
+                Text(
+                    favorite.title,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    favorite.date,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Text(
                     favorite.explanation?.let { htmlToPlainText(it) }
                         ?: "Sem explicação disponível."
