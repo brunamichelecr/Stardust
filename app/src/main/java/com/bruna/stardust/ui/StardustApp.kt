@@ -24,6 +24,7 @@ import com.bruna.stardust.ui.today.TodayScreen
 @Composable
 fun StardustApp() {
     var selectedTab by rememberSaveable { mutableStateOf(AppTab.Today) }
+    var selectedFavoriteDate by rememberSaveable { mutableStateOf<String?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -32,7 +33,10 @@ fun StardustApp() {
                 AppTab.entries.forEach { tab ->
                     NavigationBarItem(
                         selected = tab == selectedTab,
-                        onClick = { selectedTab = tab },
+                        onClick = {
+                            selectedTab = tab
+                            if (tab == AppTab.Favorites) selectedFavoriteDate = null
+                        },
                         icon = { Icon(tab.icon, contentDescription = tab.label) },
                         label = { Text(tab.label) }
                     )
@@ -47,7 +51,11 @@ fun StardustApp() {
         when (selectedTab) {
             AppTab.Today -> TodayScreen(modifier = contentModifier)
             AppTab.Archive -> ArchiveScreen(modifier = contentModifier)
-            AppTab.Favorites -> FavoritesScreen(modifier = contentModifier)
+            AppTab.Favorites -> FavoritesScreen(
+                selectedDate = selectedFavoriteDate,
+                onSelectedDateChange = { selectedFavoriteDate = it },
+                modifier = contentModifier
+            )
         }
     }
 }

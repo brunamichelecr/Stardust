@@ -1,5 +1,6 @@
 package com.bruna.stardust.ui.favorites
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,24 +26,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
-import androidx.activity.compose.BackHandler
 
 @Composable
 fun FavoritesScreen(
+    selectedDate: String?,
+    onSelectedDateChange: (String?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FavoritesViewModel = viewModel()
 ) {
     val favorites by viewModel.favorites.collectAsState()
-    var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
 
     val selected = favorites.find { it.date == selectedDate }
     BackHandler(enabled = selected != null) {
-        selectedDate = null
+        onSelectedDateChange(null)
     }
     if (selected != null) {
         FavoriteDetailScreen(
             favorite = selected,
-            onBack = { selectedDate = null },
+            onBack = { onSelectedDateChange(null) },
             onSaveNote = { note -> viewModel.updateNote(selected.date, note) },
             modifier = modifier
         )
@@ -58,9 +56,8 @@ fun FavoritesScreen(
             items(favorites, key = { it.date }) { favorite ->
                 FavoriteRow(
                     favorite = favorite,
-                    onClick = { selectedDate = favorite.date },
-                    onDelete = { viewModel.delete(favorite.date) }
-                )
+                    onClick = { onSelectedDateChange(favorite.date) },
+                    onDelete = { viewModel.delete(favorite.date) })
             }
         }
     }
@@ -68,9 +65,7 @@ fun FavoritesScreen(
 
 @Composable
 private fun FavoriteRow(
-    favorite: FavoriteApod,
-    onClick: () -> Unit,
-    onDelete: () -> Unit
+    favorite: FavoriteApod, onClick: () -> Unit, onDelete: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -95,8 +90,7 @@ private fun FavoriteRow(
         }
         IconButton(onClick = onDelete) {
             Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Remover dos favoritos"
+                imageVector = Icons.Default.Delete, contentDescription = "Remover dos favoritos"
             )
         }
     }
