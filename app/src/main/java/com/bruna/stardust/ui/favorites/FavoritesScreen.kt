@@ -34,6 +34,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.ui.components.MessageState
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 
 @Composable
 fun FavoritesScreen(
@@ -72,6 +74,25 @@ fun FavoritesScreen(
                     onValueChange = { novoTexto -> searchText = novoTexto },
                     label = { Text("Buscar nos favoritos") },
                     singleLine = true,
+                    shape = RoundedCornerShape(24.dp),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null
+                        )
+                    },
+                    trailingIcon = if (searchText.isNotEmpty()) {
+                        {
+                            IconButton(onClick = { searchText = "" }) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Limpar busca"
+                                )
+                            }
+                        }
+                    } else {
+                        null
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
