@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,8 +75,7 @@ fun FavoriteDetailScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(Color.Black)
-                .onSizeChanged { size = it }
-        ) {
+                .onSizeChanged { size = it }) {
             AsyncImage(
                 model = favorite.hdurl,
                 contentDescription = favorite.title,
@@ -89,8 +89,7 @@ fun FavoriteDetailScreen(
                         translationX = offset.x,
                         translationY = offset.y
                     )
-                    .transformable(state = transformState)
-            )
+                    .transformable(state = transformState))
             Button(
                 onClick = { fullscreen = false },
                 modifier = Modifier
@@ -107,8 +106,7 @@ fun FavoriteDetailScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             Button(
-                onClick = onBack,
-                modifier = Modifier.padding(16.dp)
+                onClick = onBack, modifier = Modifier.padding(16.dp)
             ) {
                 Text("Voltar")
             }
@@ -119,25 +117,25 @@ fun FavoriteDetailScreen(
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { fullscreen = true }
-            )
+                    .clickable { fullscreen = true })
 
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    favorite.title,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Text(
-                    favorite.date,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    favorite.explanation?.let { htmlToPlainText(it) }
-                        ?: "Sem explicação disponível."
-                )
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column {
+                    Text(
+                        favorite.title, style = MaterialTheme.typography.headlineSmall
+                    )
+                    Text(
+                        favorite.date,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(favorite.explanation?.let { htmlToPlainText(it) }
+                    ?: "Sem explicação disponível.")
             }
-
             OutlinedTextField(
                 value = noteText,
                 onValueChange = { novoTexto -> noteText = novoTexto },
@@ -147,8 +145,7 @@ fun FavoriteDetailScreen(
                 trailingIcon = {
                     Column {
                         IconButton(
-                            onClick = { onSaveNote(noteText) },
-                            enabled = noteText != favorite.note
+                            onClick = { onSaveNote(noteText) }, enabled = noteText != favorite.note
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
@@ -159,8 +156,7 @@ fun FavoriteDetailScreen(
                             onClick = {
                                 noteText = ""
                                 onSaveNote("")
-                            },
-                            enabled = favorite.note.isNotEmpty()
+                            }, enabled = favorite.note.isNotEmpty()
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Favorite
 import com.bruna.stardust.ui.favorites.FavoritesViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.Arrangement
 
 @Composable
 fun TodayScreen(
@@ -83,39 +84,65 @@ fun ApodContent(
                 contentDescription = item.title,
                 modifier = Modifier.fillMaxWidth()
             )
-        } else {
-            Text("Sem imagem disponível.")
         }
 
-        if (item.media_type != "image") {
-            Button(onClick = {
-                context.startActivity(Intent(Intent.ACTION_VIEW, item.url.toUri()))
-            }) {
-                Text("Abrir na NASA")
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            if (item.hdurl == null) {
+                Text("Sem imagem disponível.")
             }
-        }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                item.title,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.weight(1f)
-            )
-            IconButton(onClick = onToggleFavorite) {
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = if (isFavorite) "Remover dos favoritos" else "Guardar nos favoritos",
-                    tint = if (isFavorite) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                    }
+            if (item.media_type != "image") {
+                Button(onClick = {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, item.url.toUri()))
+                }) {
+                    Text("Abrir na NASA")
+                }
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        item.title,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Text(
+                        item.date,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = onToggleFavorite) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = if (isFavorite) "Remover dos favoritos" else "Guardar nos favoritos",
+                        tint = if (isFavorite) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                        }
+                    )
+                }
+            }
+
+            Text(item.explanation?.let { htmlToPlainText(it) } ?: "Sem explicação disponível.")
+
+            item.credit?.let {
+                Text(
+                    "Crédito: ${htmlToPlainText(it)}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            item.copyright?.let {
+                Text(
+                    "© ${htmlToPlainText(it)}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
-
-        Text(item.explanation?.let { htmlToPlainText(it) } ?: "Sem explicação disponível.")
-        item.credit?.let { Text("Crédito: ${htmlToPlainText(it)}") }
-        item.copyright?.let { Text("© ${htmlToPlainText(it)}") }
     }
 }
