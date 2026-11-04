@@ -26,6 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.bruna.stardust.data.local.FavoriteApod
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 @Composable
 fun FavoritesScreen(
@@ -35,6 +39,10 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel = viewModel()
 ) {
     val favorites by viewModel.favorites.collectAsState()
+    var searchText by rememberSaveable { mutableStateOf("") }
+    val filteredFavorites = favorites.filter {
+        it.title.contains(searchText, ignoreCase = true)
+    }
 
     val selected = favorites.find { it.date == selectedDate }
     BackHandler(enabled = selected != null) {
@@ -53,7 +61,18 @@ fun FavoritesScreen(
         }
     } else {
         LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(favorites, key = { it.date }) { favorite ->
+            item {
+                OutlinedTextField(
+                    value = searchText,
+                    onValueChange = { novoTexto -> searchText = novoTexto },
+                    label = { Text("Buscar nos favoritos") },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+            items(filteredFavorites, key = { it.date }) { favorite ->
                 FavoriteRow(
                     favorite = favorite,
                     onClick = { onSelectedDateChange(favorite.date) },
