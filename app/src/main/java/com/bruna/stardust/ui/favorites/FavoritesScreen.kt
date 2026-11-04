@@ -72,6 +72,14 @@ fun FavoritesScreen(
                         .padding(16.dp)
                 )
             }
+            if (filteredFavorites.isEmpty()) {
+                item {
+                    Text(
+                        "Nenhum favorito encontrado.",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
             items(filteredFavorites, key = { it.date }) { favorite ->
                 FavoriteRow(
                     favorite = favorite,
