@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Arrangement
 import com.bruna.stardust.ui.components.LoadingState
 import com.bruna.stardust.ui.components.MessageState
+import com.bruna.stardust.ui.components.TranslatableText
 
 @Composable
 fun TodayScreen(
@@ -120,7 +121,12 @@ fun ApodContent(
                 }
             }
 
-            Text(item.explanation?.let { htmlToPlainText(it) } ?: "Sem explicação disponível.")
+            val explanation = item.explanation?.let { htmlToPlainText(it) }
+            if (explanation != null) {
+                TranslatableText(text = explanation)
+            } else {
+                Text("Sem explicação disponível.")
+            }
 
             item.credit?.let {
                 Text(

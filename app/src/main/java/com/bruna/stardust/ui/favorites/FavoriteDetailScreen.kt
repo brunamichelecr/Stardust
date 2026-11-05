@@ -47,6 +47,7 @@ import androidx.compose.material3.IconButtonDefaults
 import android.content.Intent
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import com.bruna.stardust.ui.components.TranslatableText
 
 @Composable
 fun FavoriteDetailScreen(
@@ -139,7 +140,7 @@ fun FavoriteDetailScreen(
                 Button(onClick = {
                     context.startActivity(Intent(Intent.ACTION_VIEW, favorite.url.toUri()))
                 }) {
-                    Text("Abrir na NASA")
+                    Text("Abrir Vídeo")
                 }
             }
             Column(
@@ -156,8 +157,12 @@ fun FavoriteDetailScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Text(favorite.explanation?.let { htmlToPlainText(it) }
-                    ?: "Sem explicação disponível.")
+                val explanation = favorite.explanation?.let { htmlToPlainText(it) }
+                if (explanation != null) {
+                    TranslatableText(text = explanation)
+                } else {
+                    Text("Sem explicação disponível.")
+                }
             }
             OutlinedTextField(
                 value = noteText,
