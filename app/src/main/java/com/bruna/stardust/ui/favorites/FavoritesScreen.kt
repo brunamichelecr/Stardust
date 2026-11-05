@@ -37,6 +37,10 @@ import com.bruna.stardust.ui.components.MessageState
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import com.bruna.stardust.ui.components.TranslatedText
+import androidx.compose.runtime.LaunchedEffect
+import com.bruna.stardust.data.settings.AppLanguage
+import com.bruna.stardust.ui.settings.SettingsViewModel
+import com.bruna.stardust.ui.translation.TranslationViewModel
 
 @Composable
 fun FavoritesScreen(
@@ -46,9 +50,20 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel = viewModel()
 ) {
     val favorites by viewModel.favorites.collectAsState()
+    val settingsViewModel: SettingsViewModel = viewModel()
+    val translationViewModel: TranslationViewModel = viewModel()
+    val translate = settingsViewModel.language == AppLanguage.Portuguese
+
+    LaunchedEffect(favorites, translate) {
+        if (translate) favorites.forEach { translationViewModel.request(it.title) }
+    }
     var searchText by rememberSaveable { mutableStateOf("") }
-    val filteredFavorites = favorites.filter {
-        it.title.contains(searchText, ignoreCase = true)
+    val filteredFavorites = favorites.filter { favorite ->
+        val matchesOriginal = favorite.title.contains(searchText, ignoreCase = true)
+        val matchesTranslation = translate &&
+                translationViewModel.translatedOrNull(favorite.title)
+                    ?.contains(searchText, ignoreCase = true) == true
+        matchesOriginal || matchesTranslation
     }
 
     val selected = favorites.find { it.date == selectedDate }
