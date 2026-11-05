@@ -44,6 +44,9 @@ import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.util.htmlToPlainText
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.IconButtonDefaults
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 
 @Composable
 fun FavoriteDetailScreen(
@@ -54,6 +57,7 @@ fun FavoriteDetailScreen(
 ) {
     var fullscreen by rememberSaveable { mutableStateOf(false) }
     var noteText by rememberSaveable { mutableStateOf(favorite.note) }
+    val context = LocalContext.current
 
     BackHandler(enabled = fullscreen) {
         fullscreen = false
@@ -131,7 +135,13 @@ fun FavoriteDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { fullscreen = true })
-
+            if (favorite.mediaType != "image") {
+                Button(onClick = {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, favorite.url.toUri()))
+                }) {
+                    Text("Abrir na NASA")
+                }
+            }
             Column(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
