@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.Arrangement
 import com.bruna.stardust.ui.components.LoadingState
 import com.bruna.stardust.ui.components.MessageState
 import com.bruna.stardust.ui.components.TranslatableText
+import com.bruna.stardust.ui.components.TranslatedText
 
 @Composable
 fun TodayScreen(
@@ -98,8 +99,8 @@ fun ApodContent(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        item.title,
+                    TranslatedText(
+                        text = item.title,
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(

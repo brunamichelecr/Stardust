@@ -36,6 +36,7 @@ import com.bruna.stardust.data.local.FavoriteApod
 import com.bruna.stardust.ui.components.MessageState
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import com.bruna.stardust.ui.components.TranslatedText
 
 @Composable
 fun FavoritesScreen(
@@ -146,7 +147,10 @@ private fun FavoriteRow(
                     .weight(1f)
                     .padding(horizontal = 12.dp)
             ) {
-                Text(favorite.title, style = MaterialTheme.typography.titleMedium)
+                TranslatedText(
+                    text = favorite.title,
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Text(
                     favorite.date,
                     style = MaterialTheme.typography.labelMedium,

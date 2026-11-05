@@ -48,6 +48,7 @@ import android.content.Intent
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.bruna.stardust.ui.components.TranslatableText
+import com.bruna.stardust.ui.components.TranslatedText
 
 @Composable
 fun FavoriteDetailScreen(
@@ -148,8 +149,9 @@ fun FavoriteDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Column {
-                    Text(
-                        favorite.title, style = MaterialTheme.typography.headlineSmall
+                    TranslatedText(
+                        text = favorite.title,
+                        style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
                         favorite.date,
