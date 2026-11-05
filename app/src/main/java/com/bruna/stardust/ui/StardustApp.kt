@@ -33,6 +33,15 @@ import com.bruna.stardust.ui.favorites.FavoritesScreen
 import com.bruna.stardust.ui.navigation.AppTab
 import com.bruna.stardust.ui.settings.SettingsViewModel
 import com.bruna.stardust.ui.today.TodayScreen
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.bruna.stardust.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +58,17 @@ fun StardustApp() {
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text("Stardust", style = MaterialTheme.typography.headlineSmall) },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Stardust", style = MaterialTheme.typography.headlineSmall)
+                    }
+                },
                 actions = {
                     Box {
                         IconButton(onClick = { menuExpanded = true }) {
